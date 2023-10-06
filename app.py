@@ -9,21 +9,15 @@ sensor_data = {}
 
 def read_serial():
     global sensor_data
+    ser = serial.Serial('/dev/ttyACM0', 9600)
     while True:
-        try:
-            ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
-            line = ser.readline().decode('utf-8').strip()
-            if line:
-                sensor_data = json.loads(line)
-            ser.close()  # Close the connection after reading
-        except json.JSONDecodeError:
-            print("Error: Invalid JSON data received.")
-        except serial.SerialException as e:
-            print(f"Serial connection error: {str(e)}")
-        except Exception as e:
-            print(f"Unexpected error: {str(e)}")
-        finally:
-            time.sleep(1)  # Avoid busy-waiting
+        if ser.in_waiting > 0:
+            raw_data = ser.readline().decode('utf-8').strip()
+            print(f"Raw data: {raw_data}")  # Log raw data
+            try:
+                sensor_data = json.loads(raw_data)
+            except Exception as e:
+                print(f"Error: {str(e)}")
 
 @app.route("/")
 def home():
