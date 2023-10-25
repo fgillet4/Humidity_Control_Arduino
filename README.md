@@ -1,8 +1,67 @@
+# Raspberry Pi Headless Setup Guide
+
+After flashing the Raspberry Pi OS onto an SD card using tools like Etcher, follow these steps to set up your Pi for headless access (without a monitor).
+
+## 1. Enable SSH Access
+
+To enable SSH access:
+- Create an empty file named `ssh` (with no file extension) and place it in the root directory of the boot partition.
+
+## 2. Set Up WiFi (Optional)
+
+Note:Make sure the wifi you are using is 2.4 GHz since the pi only supports 2.4 GHz
+
+If you want your Raspberry Pi to connect to your WiFi network on boot:
+1. Create a file named `wpa_supplicant.conf` in the root directory of the boot partition.
+2. Add the following content, replacing with your actual WiFi details:
+
+country=US
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+
+network={
+ssid="YOUR_WIFI_SSID"
+psk="YOUR_WIFI_PASSWORD"
+key_mgmt=WPA-PSK
+}
+
+Ensure to replace `YOUR_WIFI_SSID` and `YOUR_WIFI_PASSWORD` with your WiFi credentials. If you're not in the US, adjust the `country` field accordingly.
+
+## 3. Safely Eject the SD Card
+
+- Ensure you safely eject the SD card from your computer.
+
+## 4. Boot Your Raspberry Pi
+
+- Insert the SD card into the Raspberry Pi and power it on.
+- After it's booted up, you can access your Raspberry Pi via SSH from another computer on the same network using:
+
+ssh pi@raspberrypi.local
+
+The default password is `raspberry`.
+
+## 5. Setting a Secure Password
+
+For enhanced security, it's recommended to change the default password to something unique. You can generate a secure password hash using:
+```bash
+echo 'your_password' | openssl passwd -6 -stdin
+```
+This command will provide you with a hashed version of your password. Use this hash when setting up password authentication in relevant configuration files.
+
+
+
+
 # Humidity Control Arduino on Raspberry Pi
 
 This README guides you on how to manage and monitor the Humidity Control Arduino service running on a Raspberry Pi. You can both use the `screen` method to run it interactively and the systemd service to run it as a background process.
 
 ## Using `screen`:
+
+### **Installing `screen`:**
+```bash
+sudo apt-get update
+sudo apt-get install screen
+```
 
 ### **Starting the Script with `screen`:**
 
