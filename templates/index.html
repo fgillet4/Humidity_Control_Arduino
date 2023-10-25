@@ -2,28 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sensor Data</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krypgrund Data</title>
+    <script>
+        function fetchData() {
+            fetch('/latest_data')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('data-display').textContent = JSON.stringify(data, null, 4);
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                });
+        }
+        setInterval(fetchData, 5000);  // Fetch data every 5 seconds
+    </script>
 </head>
-<body>
-    <h1>Sensor Data</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Sensor</th>
-                <th>Temperature (C)</th>
-                <th>Relative Humidity (%)</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for key, value in data.items() %}
-            <tr>
-                <td>{{ key }}</td>
-                <td>{{ value["Temperature C"] }}</td>
-                <td>{{ value["Relative Humidity %"] }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<body onload="fetchData()">
+    <h2>Data from Arduino</h2>
+    <pre id="data-display"></pre>
 </body>
 </html>
