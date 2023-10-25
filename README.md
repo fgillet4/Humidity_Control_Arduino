@@ -108,6 +108,45 @@ sudo systemctl restart humidity-control.service
 ```bash
 sudo systemctl status humidity-control.service
 ```
+# Arduino CLI Setup on Raspberry Pi
+
+Follow these steps to install, set up, and use the `arduino-cli` on the Raspberry Pi to compile and upload sketches to your Arduino board.
+
+## 1. Installing `arduino-cli`
+
+Download and install the `arduino-cli`:
+```bash
+curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+```
+
+## 2. Update $PATH
+
+Append the installation directory of `arduino-cli` to your `~/.bashrc`:
+```bash
+echo 'export PATH="$PATH:/home/krypgrund/krypgrund/bin"' >> ~/.bashrc
+```
+Reload your `~/.bashrc`:
+```bash
+source ~/.bashrc
+```
+
+## 3. Initialize Configuration
+
+Initialize a new configuration file:
+```bash
+arduino-cli config init
+```
+
+## 4. Update Core Index
+
+Fetch the latest list of available platforms:
+```bash
+arduino-cli core update-index
+```
+
+## 5. Installing Arduino Core
+
+(Note: Additional instructions to be added based on the specific core or other requirements.)
 
 
 
