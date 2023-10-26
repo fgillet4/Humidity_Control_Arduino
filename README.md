@@ -14,7 +14,7 @@ Note:Make sure the wifi you are using is 2.4 GHz since the pi only supports 2.4 
 If you want your Raspberry Pi to connect to your WiFi network on boot:
 1. Create a file named `wpa_supplicant.conf` in the root directory of the boot partition.
 2. Add the following content, replacing with your actual WiFi details:
-
+```
 country=US
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
@@ -24,6 +24,7 @@ ssid="YOUR_WIFI_SSID"
 psk="YOUR_WIFI_PASSWORD"
 key_mgmt=WPA-PSK
 }
+```
 
 Ensure to replace `YOUR_WIFI_SSID` and `YOUR_WIFI_PASSWORD` with your WiFi credentials. If you're not in the US, adjust the `country` field accordingly.
 
