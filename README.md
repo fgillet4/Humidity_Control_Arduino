@@ -68,7 +68,7 @@ sudo apt-get install screen
 
 1. SSH into your Raspberry Pi:
     ```bash
-    ssh krypgrund@krypgrund.local
+    ssh raspberrypi@raspberrypi.local
     ```
 
 2. Start a new `screen` session named "arduino":
@@ -149,5 +149,118 @@ arduino-cli core update-index
 
 (Note: Additional instructions to be added based on the specific core or other requirements.)
 
+# Setting Up Custom Hostname on Raspberry Pi
+
+## **1. Setting up Raspberry Pi**
+
+- Start with a fresh install of Raspberry Pi OS (formerly Raspbian) on your Raspberry Pi.
+
+## **2. Boot up and connect**
+
+- Once you've booted up, connect to your Raspberry Pi either directly (using a monitor, keyboard, etc.) or SSH into it using its default hostname:
+
+  ```bash
+  ssh pi@raspberrypi.local
+  ```
+
+  > Default password is usually `raspberry`.
+
+## **3. Change the hostname**
+
+- Once connected, edit the `hostname` file:
+
+  ```bash
+  sudo nano /etc/hostname
+  ```
+
+  - Replace the default name `raspberrypi` with your desired name. For this guide, we'll use `krypgrund`.
+
+- Next, update the `hosts` file:
+
+  ```bash
+  sudo nano /etc/hosts
+  ```
+
+  - Find the line that reads `127.0.1.1 raspberrypi` and change `raspberrypi` to `krypgrund`.
+
+## **4. Reboot the Raspberry Pi**
+
+- For the changes to take effect, reboot the Raspberry Pi:
+
+  ```bash
+  sudo reboot
+  ```
+
+## **5. Connect using the new hostname**
+
+- After the reboot, you can now SSH into your Raspberry Pi using the new hostname:
+
+  ```bash
+  ssh pi@krypgrund.local
+  ```
+
+  > Remember to use the password you've set previously.
+
+## **6. All done!**
+
+- Your Raspberry Pi is now accessible via the new hostname `krypgrund.local`.
+
+# Changing Default SSH Username on Raspberry Pi
+
+## **1. Log into your Raspberry Pi**
+
+- Start by SSHing into your Raspberry Pi using the default credentials:
+
+  ```bash
+  ssh pi@krypgrund.local
+  ```
+
+  > Default password is usually `raspberry`.
+
+## **2. Create a new user**
+
+- Once logged in, add a new user called `krypgrund`:
+
+  ```bash
+  sudo adduser krypgrund
+  ```
+
+  - Follow the prompts to set a password and provide any additional information (or just press enter for defaults).
+
+## **3. Grant the new user sudo privileges**
+
+- To ensure the new user can perform administrative tasks, add them to the `sudo` group:
+
+  ```bash
+  sudo usermod -aG sudo krypgrund
+  ```
+
+## **4. Test the new user**
+
+- Before making any further changes, SSH into the Raspberry Pi using the new user to ensure everything is working:
+
+  ```bash
+  ssh krypgrund@krypgrund.local
+  ```
+
+  > Enter the password you set for `krypgrund` when prompted.
+
+## **5. Disable the default `pi` user**
+
+- For security reasons, it's a good idea to disable the default `pi` user once you're certain your new user works:
+
+  ```bash
+  sudo passwd -l pi
+  ```
+
+  This locks the `pi` account.
+
+## **6. All done!**
+
+- You've successfully changed the default SSH user. Now you can log in with:
+
+  ```bash
+  ssh krypgrund@krypgrund.local
+  ```
 
 
