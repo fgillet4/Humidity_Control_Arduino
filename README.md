@@ -1,3 +1,9 @@
+# Install Python Packages
+
+`pip install Flask pyserial threading jsonify`
+
+Python version 3.11
+
 # Raspberry Pi Headless Setup Guide
 
 After flashing the Raspberry Pi OS onto an SD card using tools like Etcher, follow these steps to set up your Pi for headless access (without a monitor).
