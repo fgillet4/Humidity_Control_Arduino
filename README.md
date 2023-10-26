@@ -52,7 +52,7 @@ This command will provide you with a hashed version of your password. Use this h
 
 
 
-# Humidity Control Arduino on Raspberry Pi
+# How to Detach the Flask Server from the SSH Session
 
 This README guides you on how to manage and monitor the Humidity Control Arduino service running on a Raspberry Pi. You can both use the `screen` method to run it interactively and the systemd service to run it as a background process.
 
@@ -90,7 +90,9 @@ If you want to see the live output or interact with the running script:
 screen -r arduino
 ```
 
-## Using systemd:
+## Use systemd to restart the Web Server upon reboot of the Pi:
+
+`humidity-control.service` should already be in the directory
 
 ### **Starting the Service:**
 ```bash
@@ -109,9 +111,9 @@ sudo systemctl restart humidity-control.service
 ```bash
 sudo systemctl status humidity-control.service
 ```
-# Arduino CLI Setup on Raspberry Pi
+# Arduino Command Line Interface (CLI) Setup on Raspberry Pi
 
-Follow these steps to install, set up, and use the `arduino-cli` on the Raspberry Pi to compile and upload sketches to your Arduino board.
+Follow these steps to install, set up, and use the `arduino-cli` on the Raspberry Pi to compile and upload sketches to your Arduino board. The use of this is to be able to change or upload new arduino sketches from ssh. Make sure you are ssh'd into the Pi.
 
 ## 1. Installing `arduino-cli`
 
@@ -173,7 +175,7 @@ arduino-cli core update-index
   sudo nano /etc/hostname
   ```
 
-  - Replace the default name `raspberrypi` with your desired name. For this guide, we'll use `krypgrund`.
+  - Replace the default name `raspberrypi` with your desired name. For this guide, we'll use `krypgrund` which means "crawlspace" in Swedish, you can use any name you like.
 
 - Next, update the `hosts` file:
 
