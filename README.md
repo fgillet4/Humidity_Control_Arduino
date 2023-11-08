@@ -270,5 +270,80 @@ arduino-cli core update-index
   ```bash
   ssh krypgrund@krypgrund.local
   ```
+# Raspberry Pi DDNS Client Setup Instructions
+
+Follow these steps to set up Dynamic DNS on your Raspberry Pi, which will keep your network accessible through a fixed hostname despite a changing public IP address.
+
+## Prerequisites
+
+* A Raspberry Pi running Raspberry Pi OS
+* An internet connection
+* A DDNS account (e.g., No-IP)
+
+## Installation and Configuration
+
+### 1. Update Your System
+
+Ensure your Raspberry Pi is up to date:
+
+```shell
+sudo apt update
+sudo apt upgrade
+```
+
+## *2. Install DDclient
+Install the `ddclient` package:
+
+```shell
+sudo apt install ddclient
+```
+
+## *3. Configure DDclient
+Install the `ddclient` package:
+
+```shell
+sudo nano /etc/ddclient.conf
+```
+
+Add your DDNS service configuration:
+
+```
+protocol=dyndns2
+use=web, web=checkip.dyndns.com/, web-skip=/"IP Address"/
+server=dynupdate.no-ip.com
+login=your_noip_login
+password=/your_noip_password/
+your_noip_hostname
+```
+Make sure to replace your_noip_login, /your_noip_password/, and your_noip_hostname with your actual No-IP credentials and hostname.
+
+## *4. Enable and Start the DDclient Service
+Enable `ddclient` to start on boot:
+
+```shell
+sudo systemctl enable ddclient
+```
+Start the `ddclient` service:
 
 
+```shell
+sudo systemctl start ddclient
+```
+
+## *5. Testing the Configuration
+
+Force an immediate update with:
+
+
+```shell
+sudo ddclient -force
+```
+Start the `ddclient` service:
+
+## *6. Check for Errors
+
+Review the `ddclient` logs if needed:
+
+```shell
+grep ddclient /var/log/syslog
+```
