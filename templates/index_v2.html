@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krypgrund Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function fetchData() {
+            fetch('/latest_data')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('data-display').textContent = JSON.stringify(data, null, 4);
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                });
+
+            fetch('/historical_data')
+                .then(response => response.json())
+                .then(data => {
+                    // Assuming data is an array of temperature & humidity values
+                    const temperatures = data.map(entry => entry.temperature);
+                    const humidities = data.map(entry => entry.humidity);
+                    // Example for temperature
+                    var ctx = document.getElementById('temperatureChart').getContext('2d');
+                    var temperatureChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: Array.from({length: temperatures.length}, (_, i) => i + 1),  // [1, 2, 3, ...]
+                            datasets: [{
+                                label: 'Temperature',
+                                data: temperatures,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                fill: false
+                            }]
+                        }
+                    });
+                    // Example for humidity
+                    var ctxHumidity = document.getElementById('humidityChart').getContext('2d');
+                    var humidityChart = new Chart(ctxHumidity, {
+                        type: 'line',
+                        data: {
+                            labels: Array.from({length: humidities.length}, (_, i) => i + 1),  // [1, 2, 3, ...]
+                            datasets: [{
+                                label: 'Humidity',
+                                data: humidities,
+                                borderColor: 'rgba(133, 193, 233, 1)',
+                                borderWidth: 1,
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,  // since humidity percentage ranges from 0 to 100
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching historical data:", error);
+                });
+        }
+
+        function controlRelay(state) {
+            fetch('/control_relay', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({state: state})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            });
+        }
+
+        function setPID() {
+            let setPoint = document.getElementById("setPoint").value;
+            fetch('/set_pid', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({set_point: setPoint})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            });
+        }
+        function updatePID() {
+            const kpValue = document.getElementById('kp').value;
+            const kiValue = document.getElementById('ki').value;
+            const kdValue = document.getElementById('kd').value;
+            
+            fetch('/update_pid', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    kp: kpValue,
+                    ki: kiValue,
+                    kd: kdValue
+                })
+            }).then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Failed to update PID values.');
+                }
+            }).then(data => {
+                alert(data);
+            }).catch(error => {
+                alert(error);
+            });
+        }
+
+        function updateDateTime() {
+            let currentDateTime = new Date();
+            let formattedDateTime = currentDateTime.toLocaleDateString() + ' ' + currentDateTime.toLocaleTimeString();
+            document.getElementById('currentDateTime').textContent = formattedDateTime;
+        }
+        setInterval(updateDateTime, 60000);  // Update date and time every minute
+        setInterval(fetchData, 5000);  // Fetch data every 5 seconds
+    </script>
+</head>
+<body onload="fetchData(); updateDateTime();">
+    <span id="currentDateTime"></span>
+    <h2>Krypgrund's Data</h2>
+    <pre id="data-display"></pre>
+
+    <h3>Historical Data</h3>
+    <canvas id="temperatureChart"></canvas>
+    <canvas id="humidityChart"></canvas>
+
+    <h3>Control Relay</h3>
+    <button onclick="controlRelay('ON')">Turn ON</button>
+    <button onclick="controlRelay('OFF')">Turn OFF</button>
+
+    <h3>Set PID</h3>
+    <input type="text" id="setPoint" placeholder="Set Point">
+    <button onclick="setPID()">Submit</button>
+
+    <h3>PID Control Parameters</h3>
+    <form id="pidForm">
+        Kp: <input type="text" id="kp" name="kp"><br><br>
+        Ki: <input type="text" id="ki" name="ki"><br><br>
+        Kd: <input type="text" id="kd" name="kd"><br><br>
+        <input type="button" value="Update PID" onclick="updatePID()">
+    </form>
+</body>
+</html>

@@ -1,0 +1,12 @@
+[Unit]
+Description=Humidity WebApp Service
+After=network.target
+
+[Service]
+User=root  # This ensures the script runs as the root user because of 'sudo'
+WorkingDirectory=/home/krypgrund/Humidity_Control_Arduino
+ExecStart=/usr/bin/sudo /usr/bin/python3 /home/krypgrund/Humidity_Control_Arduino/web_server.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
